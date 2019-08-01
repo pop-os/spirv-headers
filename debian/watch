@@ -1,3 +1,5 @@
 version=4
 
-# no tagged releases
+opts="filenamemangle=s%(?:.*?)?(\d[\d.]*)\.tar\.gz%spirv-headers-$1.tar.gz%" \
+   https://github.com/KhronosGroup/spirv-headers/tags \
+   (?:.*?/)?(\d[\d.]*)\.tar\.gz
