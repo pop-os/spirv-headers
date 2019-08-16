@@ -154,6 +154,12 @@ enum class ExecutionMode : unsigned {
     DerivativeGroupQuadsNV = 5289,
     DerivativeGroupLinearNV = 5290,
     OutputTrianglesNV = 5298,
+    PixelInterlockOrderedEXT = 5366,
+    PixelInterlockUnorderedEXT = 5367,
+    SampleInterlockOrderedEXT = 5368,
+    SampleInterlockUnorderedEXT = 5369,
+    ShadingRateInterlockOrderedEXT = 5370,
+    ShadingRateInterlockUnorderedEXT = 5371,
     Max = 0x7fffffff,
 };
 
@@ -449,6 +455,7 @@ enum class Decoration : unsigned {
     HlslCounterBufferGOOGLE = 5634,
     HlslSemanticGOOGLE = 5635,
     UserSemantic = 5635,
+    UserTypeGOOGLE = 5636,
     Max = 0x7fffffff,
 };
 
@@ -551,6 +558,10 @@ enum class BuiltIn : unsigned {
     HitTNV = 5332,
     HitKindNV = 5333,
     IncomingRayFlagsNV = 5351,
+    WarpsPerSMNV = 5374,
+    SMCountNV = 5375,
+    WarpIDNV = 5376,
+    SMIDNV = 5377,
     Max = 0x7fffffff,
 };
 
@@ -622,6 +633,7 @@ enum class MemorySemanticsShift : unsigned {
     OutputMemoryKHR = 12,
     MakeAvailableKHR = 13,
     MakeVisibleKHR = 14,
+    Volatile = 15,
     Max = 0x7fffffff,
 };
 
@@ -640,6 +652,7 @@ enum class MemorySemanticsMask : unsigned {
     OutputMemoryKHR = 0x00001000,
     MakeAvailableKHR = 0x00002000,
     MakeVisibleKHR = 0x00004000,
+    Volatile = 0x00008000,
 };
 
 enum class MemoryAccessShift : unsigned {
@@ -796,6 +809,7 @@ enum class Capability : unsigned {
     FragmentMaskAMD = 5010,
     StencilExportEXT = 5013,
     ImageReadWriteLodAMD = 5015,
+    ShaderClockKHR = 5055,
     SampleMaskOverrideCoverageNV = 5249,
     GeometryShaderPassthroughNV = 5251,
     ShaderViewportIndexLayerEXT = 5254,
@@ -829,10 +843,16 @@ enum class Capability : unsigned {
     PhysicalStorageBufferAddressesEXT = 5347,
     ComputeDerivativeGroupLinearNV = 5350,
     CooperativeMatrixNV = 5357,
+    FragmentShaderSampleInterlockEXT = 5363,
+    FragmentShaderShadingRateInterlockEXT = 5372,
+    ShaderSMBuiltinsNV = 5373,
+    FragmentShaderPixelInterlockEXT = 5378,
+    DemoteToHelperInvocationEXT = 5379,
     SubgroupShuffleINTEL = 5568,
     SubgroupBufferBlockIOINTEL = 5569,
     SubgroupImageBlockIOINTEL = 5570,
     SubgroupImageMediaBlockIOINTEL = 5579,
+    IntegerFunctions2INTEL = 5584,
     SubgroupAvcMotionEstimationINTEL = 5696,
     SubgroupAvcMotionEstimationIntraINTEL = 5697,
     SubgroupAvcMotionEstimationChromaINTEL = 5698,
@@ -1200,6 +1220,7 @@ enum class Op : unsigned {
     OpGroupSMaxNonUniformAMD = 5007,
     OpFragmentMaskFetchAMD = 5011,
     OpFragmentFetchAMD = 5012,
+    OpReadClockKHR = 5056,
     OpImageSampleFootprintNV = 5283,
     OpGroupNonUniformPartitionNV = 5296,
     OpWritePackedPrimitiveIndices4x8NV = 5299,
@@ -1214,6 +1235,10 @@ enum class Op : unsigned {
     OpCooperativeMatrixStoreNV = 5360,
     OpCooperativeMatrixMulAddNV = 5361,
     OpCooperativeMatrixLengthNV = 5362,
+    OpBeginInvocationInterlockEXT = 5364,
+    OpEndInvocationInterlockEXT = 5365,
+    OpDemoteToHelperInvocationEXT = 5380,
+    OpIsHelperInvocationEXT = 5381,
     OpSubgroupShuffleINTEL = 5571,
     OpSubgroupShuffleDownINTEL = 5572,
     OpSubgroupShuffleUpINTEL = 5573,
@@ -1224,6 +1249,20 @@ enum class Op : unsigned {
     OpSubgroupImageBlockWriteINTEL = 5578,
     OpSubgroupImageMediaBlockReadINTEL = 5580,
     OpSubgroupImageMediaBlockWriteINTEL = 5581,
+    OpUCountLeadingZerosINTEL = 5585,
+    OpUCountTrailingZerosINTEL = 5586,
+    OpAbsISubINTEL = 5587,
+    OpAbsUSubINTEL = 5588,
+    OpIAddSatINTEL = 5589,
+    OpUAddSatINTEL = 5590,
+    OpIAverageINTEL = 5591,
+    OpUAverageINTEL = 5592,
+    OpIAverageRoundedINTEL = 5593,
+    OpUAverageRoundedINTEL = 5594,
+    OpISubSatINTEL = 5595,
+    OpUSubSatINTEL = 5596,
+    OpIMul32x16INTEL = 5597,
+    OpUMul32x16INTEL = 5598,
     OpDecorateString = 5632,
     OpDecorateStringGOOGLE = 5632,
     OpMemberDecorateString = 5633,
@@ -1714,6 +1753,7 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case Op::OpGroupSMaxNonUniformAMD: *hasResult = true; *hasResultType = true; break;
     case Op::OpFragmentMaskFetchAMD: *hasResult = true; *hasResultType = true; break;
     case Op::OpFragmentFetchAMD: *hasResult = true; *hasResultType = true; break;
+    case Op::OpReadClockKHR: *hasResult = true; *hasResultType = true; break;
     case Op::OpImageSampleFootprintNV: *hasResult = true; *hasResultType = true; break;
     case Op::OpGroupNonUniformPartitionNV: *hasResult = true; *hasResultType = true; break;
     case Op::OpWritePackedPrimitiveIndices4x8NV: *hasResult = false; *hasResultType = false; break;
@@ -1728,6 +1768,10 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case Op::OpCooperativeMatrixStoreNV: *hasResult = false; *hasResultType = false; break;
     case Op::OpCooperativeMatrixMulAddNV: *hasResult = true; *hasResultType = true; break;
     case Op::OpCooperativeMatrixLengthNV: *hasResult = true; *hasResultType = true; break;
+    case Op::OpBeginInvocationInterlockEXT: *hasResult = false; *hasResultType = false; break;
+    case Op::OpEndInvocationInterlockEXT: *hasResult = false; *hasResultType = false; break;
+    case Op::OpDemoteToHelperInvocationEXT: *hasResult = false; *hasResultType = false; break;
+    case Op::OpIsHelperInvocationEXT: *hasResult = true; *hasResultType = true; break;
     case Op::OpSubgroupShuffleINTEL: *hasResult = true; *hasResultType = true; break;
     case Op::OpSubgroupShuffleDownINTEL: *hasResult = true; *hasResultType = true; break;
     case Op::OpSubgroupShuffleUpINTEL: *hasResult = true; *hasResultType = true; break;
@@ -1738,10 +1782,22 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
     case Op::OpSubgroupImageBlockWriteINTEL: *hasResult = false; *hasResultType = false; break;
     case Op::OpSubgroupImageMediaBlockReadINTEL: *hasResult = true; *hasResultType = true; break;
     case Op::OpSubgroupImageMediaBlockWriteINTEL: *hasResult = false; *hasResultType = false; break;
+    case Op::OpUCountLeadingZerosINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUCountTrailingZerosINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpAbsISubINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpAbsUSubINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpIAddSatINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUAddSatINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpIAverageINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUAverageINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpIAverageRoundedINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUAverageRoundedINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpISubSatINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUSubSatINTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpIMul32x16INTEL: *hasResult = true; *hasResultType = true; break;
+    case Op::OpUMul32x16INTEL: *hasResult = true; *hasResultType = true; break;
     case Op::OpDecorateString: *hasResult = false; *hasResultType = false; break;
-    case Op::OpDecorateStringGOOGLE: *hasResult = false; *hasResultType = false; break;
     case Op::OpMemberDecorateString: *hasResult = false; *hasResultType = false; break;
-    case Op::OpMemberDecorateStringGOOGLE: *hasResult = false; *hasResultType = false; break;
     case Op::OpVmeImageINTEL: *hasResult = true; *hasResultType = true; break;
     case Op::OpTypeVmeImageINTEL: *hasResult = true; *hasResultType = false; break;
     case Op::OpTypeAvcImePayloadINTEL: *hasResult = true; *hasResultType = false; break;

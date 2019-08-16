@@ -150,6 +150,12 @@ namespace Spv
             DerivativeGroupQuadsNV = 5289,
             DerivativeGroupLinearNV = 5290,
             OutputTrianglesNV = 5298,
+            PixelInterlockOrderedEXT = 5366,
+            PixelInterlockUnorderedEXT = 5367,
+            SampleInterlockOrderedEXT = 5368,
+            SampleInterlockUnorderedEXT = 5369,
+            ShadingRateInterlockOrderedEXT = 5370,
+            ShadingRateInterlockUnorderedEXT = 5371,
         }
 
         public enum StorageClass
@@ -447,6 +453,7 @@ namespace Spv
             HlslCounterBufferGOOGLE = 5634,
             HlslSemanticGOOGLE = 5635,
             UserSemantic = 5635,
+            UserTypeGOOGLE = 5636,
         }
 
         public enum BuiltIn
@@ -549,6 +556,10 @@ namespace Spv
             HitTNV = 5332,
             HitKindNV = 5333,
             IncomingRayFlagsNV = 5351,
+            WarpsPerSMNV = 5374,
+            SMCountNV = 5375,
+            WarpIDNV = 5376,
+            SMIDNV = 5377,
         }
 
         public enum SelectionControlShift
@@ -623,6 +634,7 @@ namespace Spv
             OutputMemoryKHR = 12,
             MakeAvailableKHR = 13,
             MakeVisibleKHR = 14,
+            Volatile = 15,
         }
 
         public enum MemorySemanticsMask
@@ -641,6 +653,7 @@ namespace Spv
             OutputMemoryKHR = 0x00001000,
             MakeAvailableKHR = 0x00002000,
             MakeVisibleKHR = 0x00004000,
+            Volatile = 0x00008000,
         }
 
         public enum MemoryAccessShift
@@ -800,6 +813,7 @@ namespace Spv
             FragmentMaskAMD = 5010,
             StencilExportEXT = 5013,
             ImageReadWriteLodAMD = 5015,
+            ShaderClockKHR = 5055,
             SampleMaskOverrideCoverageNV = 5249,
             GeometryShaderPassthroughNV = 5251,
             ShaderViewportIndexLayerEXT = 5254,
@@ -833,10 +847,16 @@ namespace Spv
             PhysicalStorageBufferAddressesEXT = 5347,
             ComputeDerivativeGroupLinearNV = 5350,
             CooperativeMatrixNV = 5357,
+            FragmentShaderSampleInterlockEXT = 5363,
+            FragmentShaderShadingRateInterlockEXT = 5372,
+            ShaderSMBuiltinsNV = 5373,
+            FragmentShaderPixelInterlockEXT = 5378,
+            DemoteToHelperInvocationEXT = 5379,
             SubgroupShuffleINTEL = 5568,
             SubgroupBufferBlockIOINTEL = 5569,
             SubgroupImageBlockIOINTEL = 5570,
             SubgroupImageMediaBlockIOINTEL = 5579,
+            IntegerFunctions2INTEL = 5584,
             SubgroupAvcMotionEstimationINTEL = 5696,
             SubgroupAvcMotionEstimationIntraINTEL = 5697,
             SubgroupAvcMotionEstimationChromaINTEL = 5698,
@@ -1204,6 +1224,7 @@ namespace Spv
             OpGroupSMaxNonUniformAMD = 5007,
             OpFragmentMaskFetchAMD = 5011,
             OpFragmentFetchAMD = 5012,
+            OpReadClockKHR = 5056,
             OpImageSampleFootprintNV = 5283,
             OpGroupNonUniformPartitionNV = 5296,
             OpWritePackedPrimitiveIndices4x8NV = 5299,
@@ -1218,6 +1239,10 @@ namespace Spv
             OpCooperativeMatrixStoreNV = 5360,
             OpCooperativeMatrixMulAddNV = 5361,
             OpCooperativeMatrixLengthNV = 5362,
+            OpBeginInvocationInterlockEXT = 5364,
+            OpEndInvocationInterlockEXT = 5365,
+            OpDemoteToHelperInvocationEXT = 5380,
+            OpIsHelperInvocationEXT = 5381,
             OpSubgroupShuffleINTEL = 5571,
             OpSubgroupShuffleDownINTEL = 5572,
             OpSubgroupShuffleUpINTEL = 5573,
@@ -1228,6 +1253,20 @@ namespace Spv
             OpSubgroupImageBlockWriteINTEL = 5578,
             OpSubgroupImageMediaBlockReadINTEL = 5580,
             OpSubgroupImageMediaBlockWriteINTEL = 5581,
+            OpUCountLeadingZerosINTEL = 5585,
+            OpUCountTrailingZerosINTEL = 5586,
+            OpAbsISubINTEL = 5587,
+            OpAbsUSubINTEL = 5588,
+            OpIAddSatINTEL = 5589,
+            OpUAddSatINTEL = 5590,
+            OpIAverageINTEL = 5591,
+            OpUAverageINTEL = 5592,
+            OpIAverageRoundedINTEL = 5593,
+            OpUAverageRoundedINTEL = 5594,
+            OpISubSatINTEL = 5595,
+            OpUSubSatINTEL = 5596,
+            OpIMul32x16INTEL = 5597,
+            OpUMul32x16INTEL = 5598,
             OpDecorateString = 5632,
             OpDecorateStringGOOGLE = 5632,
             OpMemberDecorateString = 5633,
