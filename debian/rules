@@ -1,14 +1,15 @@
 #!/usr/bin/make -f
 
+# see /usr/share/dpkg/*
+include /usr/share/dpkg/pkg-info.mk
+
 %:
-	dh $@ 
+	dh $@
 
 override_dh_auto_configure:
 override_dh_auto_build:
 
-gentarball: SOURCE=spirv-headers
-gentarball: UV=$(shell dpkg-parsechangelog|awk '/^Version:/ {print $$2}'|sed 's/-.*$$//')
 gentarball:
-	git archive --format=tar upstream-unstable --prefix=$(SOURCE)-$(UV)/ | gzip -9 > \
-		../$(SOURCE)_$(UV).orig.tar.gz
-
+	git archive --format=tar upstream-unstable --prefix=$(DEB_SOURCE)-$(DEB_VERSION_UPSTREAM)/ | \
+		gzip -9 > \
+		../$(DEB_SOURCE)_$(DEB_VERSION_UPSTREAM).orig.tar.gz

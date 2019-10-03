@@ -1,3 +1,9 @@
+spirv-headers (1.5.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Thu, 03 Oct 2019 12:31:25 +0300
+
 spirv-headers (1.4.1+git20190816-1) unstable; urgency=medium
 
   * New upstream snapshot, drop the patch.
