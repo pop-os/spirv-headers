@@ -1,3 +1,9 @@
+spirv-headers (1.5.1-2) unstable; urgency=medium
+
+  * Sync with 1.5.1.corrected tag.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Tue, 19 Nov 2019 23:35:01 +0200
+
 spirv-headers (1.5.1-1) unstable; urgency=medium
 
   * New upstream release.
