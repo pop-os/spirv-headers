@@ -10,6 +10,7 @@ Vcs-Browser: https://salsa.debian.org/xorg-team/vulkan/spirv-headers
 
 Package: spirv-headers
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Description: Machine-readable files for the SPIR-V Registry
  This package includes:
