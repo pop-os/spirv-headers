@@ -1,3 +1,9 @@
+spirv-headers (1.5.1+git20200409-1) unstable; urgency=medium
+
+  * New upstream snapshot for SPV_KHR_ray_tracing. (LP: #1871754)
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Thu, 09 Apr 2020 14:12:57 +0300
+
 spirv-headers (1.5.1-4) unstable; urgency=medium
 
   * Mark spirv-headers Multi-Arch: foreign. (Closes: #941943)
