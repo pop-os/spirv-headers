@@ -1,3 +1,9 @@
+spirv-headers (1.5.3+1-1) unstable; urgency=medium
+
+  * New upstream snapshot from 1.5.3.reservations1 tag.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Tue, 15 Sep 2020 18:36:16 +0300
+
 spirv-headers (1.5.3-1) unstable; urgency=medium
 
   * New upstream release.
