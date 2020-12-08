@@ -1,3 +1,10 @@
+spirv-headers (1.5.4+rt-1) unstable; urgency=medium
+
+  * New upstream snapshot.
+    - support for raytracing
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Tue, 08 Dec 2020 23:18:31 +0200
+
 spirv-headers (1.5.4-1) unstable; urgency=medium
 
   * New upstream release.
