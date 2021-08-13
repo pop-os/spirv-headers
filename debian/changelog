@@ -1,3 +1,10 @@
+spirv-headers (1.5.4+rt2-2) experimental; urgency=medium
+
+  * revert-to-07f259e68af3a54.diff: Newer headers break spirv-tools
+    build, so revert to the known-good commit.
+
+ -- Timo Aaltonen <tjaalton@debian.org>  Fri, 13 Aug 2021 09:26:07 +0300
+
 spirv-headers (1.5.4+rt2-1) experimental; urgency=medium
 
   * New upstream snapshot.

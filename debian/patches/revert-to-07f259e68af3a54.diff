@@ -1,0 +1,917 @@
+diff --git a/.github/workflows/presubmit.yml b/.github/workflows/presubmit.yml
+new file mode 100644
+index 0000000..d9c25fa
+--- /dev/null
++++ b/.github/workflows/presubmit.yml
+@@ -0,0 +1,37 @@
++name: Presubmit
++on: [push, pull_request]
++
++jobs:
++  build:
++    name: Build ${{ matrix.os }}
++    runs-on: ${{ matrix.os }}
++    strategy:
++      matrix:
++        os: [ubuntu-latest, macos-latest, windows-latest]
++    steps:
++      - uses: actions/checkout@v2
++      - name: Install Ubuntu packages
++        if: matrix.os == 'ubuntu-latest'
++        run: sudo apt install -y dos2unix
++      - name: Install macOS packages
++        if: matrix.os == 'macos-latest'
++        run: brew install dos2unix
++      - name: Build
++        run: |
++          mkdir build
++          cd build
++          cmake -DCMAKE_INSTALL_PREFIX=install ..
++          cmake --build . --target install
++      - name: Build spec tools
++        run: |
++          cd tools/buildHeaders
++          mkdir build
++          cd build
++          cmake ..
++          cmake --build . --target install
++      - name: Build headers
++        run: |
++          cd tools/buildHeaders
++          ./bin/makeHeaders
++      - name: Check generated headers
++        run: git diff --exit-code
+diff --git a/README.md b/README.md
+index b1aa964..8c7039f 100644
+--- a/README.md
++++ b/README.md
+@@ -140,10 +140,21 @@ and can be used to test a PR, or even to include the results in the PR.
+ This is not required though.
+ 
+ The header-generation project is under the `tools/buildHeaders` directory.
+-Use CMake to build the project, in a `build` subdirectory (under `tools/buildHeaders`).
++Use CMake to build and install the project, in a `build` subdirectory (under `tools/buildHeaders`).
+ There is then a bash script at `bin/makeHeaders` that shows how to use the built
+ header-generator binary to generate the headers from the JSON grammar.
+ (Execute `bin/makeHeaders` from the `tools/buildHeaders` directory.)
++Here's a complete example:
++
++```
++cd tools/buildHeaders
++mkdir build
++cd build
++cmake ..
++cmake --build . --target install
++cd ..
++./bin/makeHeaders
++```
+ 
+ Notes:
+ - this generator is used in a broader context within Khronos to generate the specification,
+diff --git a/include/spirv/spir-v.xml b/include/spirv/spir-v.xml
+index 81ef5ae..75cba89 100644
+--- a/include/spirv/spir-v.xml
++++ b/include/spirv/spir-v.xml
+@@ -132,13 +132,14 @@
+     <ids type="opcode" start="6016" end="6079" vendor="Khronos" comment="Contact @tobski"/>
+     <ids type="opcode" start="6080" end="6143" vendor="Intel" comment="Contact mariusz.merecki@intel.com"/>
+     <ids type="opcode" start="6144" end="6271" vendor="Intel" comment="Contact michael.kinsner@intel.com"/>
++    <ids type="opcode" start="6272" end="6399" vendor="Huawei" comment="Contact wanghuilong2@xunweitech.com"/>
+     <!-- Opcode enumerants to reserve for future use. To get a block, allocate
+          multiples of 64 starting at the lowest available point in this
+          block and add a corresponding <ids> tag immediately above. Make
+          sure to fill in the vendor attribute, and preferably add a contact
+          person/address in a comment attribute. -->
+     <!-- Example new block: <ids type="opcode" start="XXXX" end="XXXX+64n-1" vendor="Add vendor" comment="Contact TBD"/> -->
+-    <ids type="opcode" start="6272" end="65535" comment="Opcode range reservable for future use by vendors"/>
++    <ids type="opcode" start="6400" end="65535" comment="Opcode range reservable for future use by vendors"/>
+     <!-- End reservations of opcodes -->
+ 
+ 
+@@ -159,13 +160,14 @@
+     <ids type="enumerant" start="6016" end="6079" vendor="Khronos" comment="Contact @tobski"/>
+     <ids type="enumerant" start="6080" end="6143" vendor="Intel" comment="Contact mariusz.merecki@intel.com"/>
+     <ids type="enumerant" start="6144" end="6271" vendor="Intel" comment="Contact michael.kinsner@intel.com"/>
++    <ids type="enumerant" start="6272" end="6399" vendor="Huawei" comment="Contact wanghuilong2@xunweitech.com"/>
+     <!-- Enumerants to reserve for future use. To get a block, allocate
+          multiples of 64 starting at the lowest available point in this
+          block and add a corresponding <ids> tag immediately above. Make
+          sure to fill in the vendor attribute, and preferably add a contact
+          person/address in a comment attribute. -->
+     <!-- Example new block: <ids type="enumerant" start="XXXX" end="XXXX+64n-1" vendor="Add vendor" comment="Contact TBD"/> -->
+-    <ids type="enumerant" start="6272" end="4294967295" comment="Enumerant range reservable for future use by vendors"/>
++    <ids type="enumerant" start="6400" end="4294967295" comment="Enumerant range reservable for future use by vendors"/>
+     <!-- End reservations of enumerants -->
+ 
+ 
+diff --git a/include/spirv/unified1/OpenCLDebugInfo100.h b/include/spirv/unified1/OpenCLDebugInfo100.h
+index 7285bd4..e3847c9 100644
+--- a/include/spirv/unified1/OpenCLDebugInfo100.h
++++ b/include/spirv/unified1/OpenCLDebugInfo100.h
+@@ -75,6 +75,7 @@ enum OpenCLDebugInfo100Instructions {
+     OpenCLDebugInfo100DebugMacroUndef = 33,
+     OpenCLDebugInfo100DebugImportedEntity = 34,
+     OpenCLDebugInfo100DebugSource = 35,
++    OpenCLDebugInfo100DebugModuleINTEL = 36,
+     OpenCLDebugInfo100InstructionsMax = 0x7fffffff
+ };
+ 
+diff --git a/include/spirv/unified1/extinst.opencl.debuginfo.100.grammar.json b/include/spirv/unified1/extinst.opencl.debuginfo.100.grammar.json
+index d4cfab2..699fe40 100644
+--- a/include/spirv/unified1/extinst.opencl.debuginfo.100.grammar.json
++++ b/include/spirv/unified1/extinst.opencl.debuginfo.100.grammar.json
+@@ -395,6 +395,21 @@
+         { "kind" : "IdRef", "name" : "'File'" },
+         { "kind" : "IdRef", "name" : "'Text'", "quantifier" : "?" }
+       ]
++    },
++    {
++      "opname" : "DebugModuleINTEL",
++      "opcode" : 36,
++      "operands" : [
++        { "kind" : "IdRef", "name" : "'Name'" },
++        { "kind" : "IdRef", "name" : "'Source'" },
++        { "kind" : "IdRef", "name" : "'Parent'" },
++        { "kind" : "LiteralInteger", "name" : "'Line'" },
++        { "kind" : "IdRef", "name" : "'ConfigurationMacros'" },
++        { "kind" : "IdRef", "name" : "'IncludePath'" },
++        { "kind" : "IdRef", "name" : "'APINotesFile'" },
++        { "kind" : "LiteralInteger", "name" : "'IsDeclaration'" }
++      ],
++      "capability" : "DebugInfoModuleINTEL"
+     }
+   ],
+   "operand_kinds" : [
+diff --git a/include/spirv/unified1/spirv.core.grammar.json b/include/spirv/unified1/spirv.core.grammar.json
+index 9259fdc..1d19c4a 100644
+--- a/include/spirv/unified1/spirv.core.grammar.json
++++ b/include/spirv/unified1/spirv.core.grammar.json
+@@ -2157,7 +2157,7 @@
+         { "kind" : "IdRef",        "name" : "'Offset'" },
+         { "kind" : "IdRef",        "name" : "'Count'" }
+       ],
+-      "capabilities" : [ "Shader" ]
++      "capabilities" : [ "Shader", "BitInstructions" ]
+     },
+     {
+       "opname" : "OpBitFieldSExtract",
+@@ -2170,7 +2170,7 @@
+         { "kind" : "IdRef",        "name" : "'Offset'" },
+         { "kind" : "IdRef",        "name" : "'Count'" }
+       ],
+-      "capabilities" : [ "Shader" ]
++      "capabilities" : [ "Shader", "BitInstructions" ]
+     },
+     {
+       "opname" : "OpBitFieldUExtract",
+@@ -2183,7 +2183,7 @@
+         { "kind" : "IdRef",        "name" : "'Offset'" },
+         { "kind" : "IdRef",        "name" : "'Count'" }
+       ],
+-      "capabilities" : [ "Shader" ]
++      "capabilities" : [ "Shader", "BitInstructions" ]
+     },
+     {
+       "opname" : "OpBitReverse",
+@@ -2194,7 +2194,7 @@
+         { "kind" : "IdResult" },
+         { "kind" : "IdRef",        "name" : "'Base'" }
+       ],
+-      "capabilities" : [ "Shader" ]
++      "capabilities" : [ "Shader", "BitInstructions" ]
+     },
+     {
+       "opname" : "OpBitCount",
+@@ -4260,6 +4260,93 @@
+       "extensions" : [ "SPV_KHR_ray_tracing" ],
+       "version" : "None"
+     },
++    {
++      "opname" : "OpSDotKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4450,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpUDotKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4451,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpSUDotKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4452,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpSDotAccSatKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4453,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "IdRef", "name" : "'Accumulator'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpUDotAccSatKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4454,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "IdRef", "name" : "'Accumulator'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
++    {
++      "opname" : "OpSUDotAccSatKHR",
++      "class"  : "Arithmetic",
++      "opcode" : 4455,
++      "operands" : [
++        { "kind" : "IdResultType" },
++        { "kind" : "IdResult" },
++        { "kind" : "IdRef", "name" : "'Vector 1'" },
++        { "kind" : "IdRef", "name" : "'Vector 2'" },
++        { "kind" : "IdRef", "name" : "'Accumulator'" },
++        { "kind" : "PackedVectorFormat", "name" : "'Packed Vector Format'", "quantifier" : "?" }
++      ],
++      "capabilities" : [ "DotProductKHR" ],
++      "version" : "None"
++    },
+     {
+         "opname" : "OpTypeRayQueryKHR",
+         "class" : "Reserved",
+@@ -8168,7 +8255,7 @@
+         { "kind" : "IdMemorySemantics", "name" : "'Semantics'" },
+         { "kind" : "IdRef",             "name" : "'Value'" }
+       ],
+-      "capabilities" : [ "AtomicFloat32AddEXT", "AtomicFloat64AddEXT" ],
++      "capabilities" : [ "AtomicFloat16AddEXT", "AtomicFloat32AddEXT", "AtomicFloat64AddEXT" ],
+       "extensions" : [ "SPV_EXT_shader_atomic_float_add" ],
+       "version" : "None"
+     },
+@@ -10346,35 +10433,51 @@
+       "enumerants" : [
+         {
+           "enumerant" : "TRN",
+-          "value" : 0
++          "value" : 0,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "TRN_ZERO",
+-          "value" : 1
++          "value" : 1,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND",
+-          "value" : 2
++          "value" : 2,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND_ZERO",
+-          "value" : 3
++          "value" : 3,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND_INF",
+-          "value" : 4
++          "value" : 4,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND_MIN_INF",
+-          "value" : 5
++          "value" : 5,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND_CONV",
+-          "value" : 6
++          "value" : 6,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "RND_CONV_ODD",
+-          "value" : 7
++          "value" : 7,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         }
+       ]
+     },
+@@ -10402,19 +10505,27 @@
+       "enumerants" : [
+         {
+           "enumerant" : "WRAP",
+-          "value" : 0
++          "value" : 0,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "SAT",
+-          "value" : 1
++          "value" : 1,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "SAT_ZERO",
+-          "value" : 2
++          "value" : 2,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         },
+         {
+           "enumerant" : "SAT_SYM",
+-          "value" : 3
++          "value" : 3,
++          "capabilities" : [ "ArbitraryPrecisionFixedPointINTEL"],
++          "version" : "None"
+         }
+       ]
+     },
+@@ -13289,6 +13400,37 @@
+           "extensions" : [ "SPV_INTEL_fpga_reg" ],
+           "version" : "None"
+         },
++        {
++          "enumerant" : "DotProductInputAllKHR",
++          "value" : 6016,
++          "extensions" : [ "SPV_KHR_integer_dot_product" ],
++          "version" : "None"
++        },
++        {
++          "enumerant" : "DotProductInput4x8BitKHR",
++          "value" : 6017,
++          "capabilities" : [ "Int8" ],
++          "extensions" : [ "SPV_KHR_integer_dot_product" ],
++          "version" : "None"
++        },
++        {
++          "enumerant" : "DotProductInput4x8BitPackedKHR",
++          "value" : 6018,
++          "extensions" : [ "SPV_KHR_integer_dot_product" ],
++          "version" : "None"
++        },
++        {
++          "enumerant" : "DotProductKHR",
++          "value" : 6019,
++          "extensions" : [ "SPV_KHR_integer_dot_product" ],
++          "version" : "None"
++        },
++        {
++          "enumerant" : "BitInstructions",
++          "value" : 6025,
++          "extensions" : [ "SPV_KHR_bit_instructions" ],
++          "version" : "None"
++        },
+         {
+           "enumerant" : "AtomicFloat32AddEXT",
+           "value" : 6033,
+@@ -13308,6 +13450,19 @@
+           "value" : 6089,
+           "extensions" : [ "SPV_INTEL_long_constant_composite" ],
+           "version" : "None"
++        },
++        {
++          "enumerant" : "AtomicFloat16AddEXT",
++          "value" : 6095,
++          "capabilities" : [ "Shader" ],
++          "extensions" : [ "SPV_EXT_shader_atomic_float16_add" ],
++          "version" : "None"
++        },
++        {
++          "enumerant" : "DebugInfoModuleINTEL",
++          "value" : 6114,
++          "extensions" : [ "SPV_INTEL_debug_module" ],
++          "version" : "None"
+         }
+       ]
+     },
+@@ -13371,6 +13526,18 @@
+         }
+       ]
+     },
++    {
++      "category" : "ValueEnum",
++      "kind" : "PackedVectorFormat",
++      "enumerants" : [
++        {
++          "enumerant" : "PackedVectorFormat4x8BitKHR",
++          "value" : 0,
++          "extensions" : [ "SPV_KHR_integer_dot_product" ],
++          "version" : "None"
++        }
++      ]
++    },
+     {
+       "category" : "Id",
+       "kind" : "IdResultType",
+diff --git a/include/spirv/unified1/spirv.cs b/include/spirv/unified1/spirv.cs
+index 4d130a1..859f0e7 100644
+--- a/include/spirv/unified1/spirv.cs
++++ b/include/spirv/unified1/spirv.cs
+@@ -1045,9 +1045,16 @@ namespace Spv
+             IOPipesINTEL = 5943,
+             BlockingPipesINTEL = 5945,
+             FPGARegINTEL = 5948,
++            DotProductInputAllKHR = 6016,
++            DotProductInput4x8BitKHR = 6017,
++            DotProductInput4x8BitPackedKHR = 6018,
++            DotProductKHR = 6019,
++            BitInstructions = 6025,
+             AtomicFloat32AddEXT = 6033,
+             AtomicFloat64AddEXT = 6034,
+             LongConstantCompositeINTEL = 6089,
++            AtomicFloat16AddEXT = 6095,
++            DebugInfoModuleINTEL = 6114,
+         }
+ 
+         public enum RayFlagsShift
+@@ -1147,6 +1154,11 @@ namespace Spv
+             SAT_SYM = 3,
+         }
+ 
++        public enum PackedVectorFormat
++        {
++            PackedVectorFormat4x8BitKHR = 0,
++        }
++
+         public enum Op
+         {
+             OpNop = 0,
+@@ -1505,6 +1517,12 @@ namespace Spv
+             OpConvertUToAccelerationStructureKHR = 4447,
+             OpIgnoreIntersectionKHR = 4448,
+             OpTerminateRayKHR = 4449,
++            OpSDotKHR = 4450,
++            OpUDotKHR = 4451,
++            OpSUDotKHR = 4452,
++            OpSDotAccSatKHR = 4453,
++            OpUDotAccSatKHR = 4454,
++            OpSUDotAccSatKHR = 4455,
+             OpTypeRayQueryKHR = 4472,
+             OpRayQueryInitializeKHR = 4473,
+             OpRayQueryTerminateKHR = 4474,
+diff --git a/include/spirv/unified1/spirv.h b/include/spirv/unified1/spirv.h
+index 0ba7862..34f90d3 100644
+--- a/include/spirv/unified1/spirv.h
++++ b/include/spirv/unified1/spirv.h
+@@ -1045,9 +1045,16 @@ typedef enum SpvCapability_ {
+     SpvCapabilityIOPipesINTEL = 5943,
+     SpvCapabilityBlockingPipesINTEL = 5945,
+     SpvCapabilityFPGARegINTEL = 5948,
++    SpvCapabilityDotProductInputAllKHR = 6016,
++    SpvCapabilityDotProductInput4x8BitKHR = 6017,
++    SpvCapabilityDotProductInput4x8BitPackedKHR = 6018,
++    SpvCapabilityDotProductKHR = 6019,
++    SpvCapabilityBitInstructions = 6025,
+     SpvCapabilityAtomicFloat32AddEXT = 6033,
+     SpvCapabilityAtomicFloat64AddEXT = 6034,
+     SpvCapabilityLongConstantCompositeINTEL = 6089,
++    SpvCapabilityAtomicFloat16AddEXT = 6095,
++    SpvCapabilityDebugInfoModuleINTEL = 6114,
+     SpvCapabilityMax = 0x7fffffff,
+ } SpvCapability;
+ 
+@@ -1146,6 +1153,11 @@ typedef enum SpvOverflowModes_ {
+     SpvOverflowModesMax = 0x7fffffff,
+ } SpvOverflowModes;
+ 
++typedef enum SpvPackedVectorFormat_ {
++    SpvPackedVectorFormatPackedVectorFormat4x8BitKHR = 0,
++    SpvPackedVectorFormatMax = 0x7fffffff,
++} SpvPackedVectorFormat;
++
+ typedef enum SpvOp_ {
+     SpvOpNop = 0,
+     SpvOpUndef = 1,
+@@ -1503,6 +1515,12 @@ typedef enum SpvOp_ {
+     SpvOpConvertUToAccelerationStructureKHR = 4447,
+     SpvOpIgnoreIntersectionKHR = 4448,
+     SpvOpTerminateRayKHR = 4449,
++    SpvOpSDotKHR = 4450,
++    SpvOpUDotKHR = 4451,
++    SpvOpSUDotKHR = 4452,
++    SpvOpSDotAccSatKHR = 4453,
++    SpvOpUDotAccSatKHR = 4454,
++    SpvOpSUDotAccSatKHR = 4455,
+     SpvOpTypeRayQueryKHR = 4472,
+     SpvOpRayQueryInitializeKHR = 4473,
+     SpvOpRayQueryTerminateKHR = 4474,
+@@ -2143,6 +2161,12 @@ inline void SpvHasResultAndType(SpvOp opcode, bool *hasResult, bool *hasResultTy
+     case SpvOpConvertUToAccelerationStructureKHR: *hasResult = true; *hasResultType = true; break;
+     case SpvOpIgnoreIntersectionKHR: *hasResult = false; *hasResultType = false; break;
+     case SpvOpTerminateRayKHR: *hasResult = false; *hasResultType = false; break;
++    case SpvOpSDotKHR: *hasResult = true; *hasResultType = true; break;
++    case SpvOpUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case SpvOpSUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case SpvOpSDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case SpvOpUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case SpvOpSUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
+     case SpvOpTypeRayQueryKHR: *hasResult = true; *hasResultType = false; break;
+     case SpvOpRayQueryInitializeKHR: *hasResult = false; *hasResultType = false; break;
+     case SpvOpRayQueryTerminateKHR: *hasResult = false; *hasResultType = false; break;
+diff --git a/include/spirv/unified1/spirv.hpp b/include/spirv/unified1/spirv.hpp
+index 06b4384..a0b35b3 100644
+--- a/include/spirv/unified1/spirv.hpp
++++ b/include/spirv/unified1/spirv.hpp
+@@ -1041,9 +1041,16 @@ enum Capability {
+     CapabilityIOPipesINTEL = 5943,
+     CapabilityBlockingPipesINTEL = 5945,
+     CapabilityFPGARegINTEL = 5948,
++    CapabilityDotProductInputAllKHR = 6016,
++    CapabilityDotProductInput4x8BitKHR = 6017,
++    CapabilityDotProductInput4x8BitPackedKHR = 6018,
++    CapabilityDotProductKHR = 6019,
++    CapabilityBitInstructions = 6025,
+     CapabilityAtomicFloat32AddEXT = 6033,
+     CapabilityAtomicFloat64AddEXT = 6034,
+     CapabilityLongConstantCompositeINTEL = 6089,
++    CapabilityAtomicFloat16AddEXT = 6095,
++    CapabilityDebugInfoModuleINTEL = 6114,
+     CapabilityMax = 0x7fffffff,
+ };
+ 
+@@ -1142,6 +1149,11 @@ enum OverflowModes {
+     OverflowModesMax = 0x7fffffff,
+ };
+ 
++enum PackedVectorFormat {
++    PackedVectorFormatPackedVectorFormat4x8BitKHR = 0,
++    PackedVectorFormatMax = 0x7fffffff,
++};
++
+ enum Op {
+     OpNop = 0,
+     OpUndef = 1,
+@@ -1499,6 +1511,12 @@ enum Op {
+     OpConvertUToAccelerationStructureKHR = 4447,
+     OpIgnoreIntersectionKHR = 4448,
+     OpTerminateRayKHR = 4449,
++    OpSDotKHR = 4450,
++    OpUDotKHR = 4451,
++    OpSUDotKHR = 4452,
++    OpSDotAccSatKHR = 4453,
++    OpUDotAccSatKHR = 4454,
++    OpSUDotAccSatKHR = 4455,
+     OpTypeRayQueryKHR = 4472,
+     OpRayQueryInitializeKHR = 4473,
+     OpRayQueryTerminateKHR = 4474,
+@@ -2139,6 +2157,12 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
+     case OpConvertUToAccelerationStructureKHR: *hasResult = true; *hasResultType = true; break;
+     case OpIgnoreIntersectionKHR: *hasResult = false; *hasResultType = false; break;
+     case OpTerminateRayKHR: *hasResult = false; *hasResultType = false; break;
++    case OpSDotKHR: *hasResult = true; *hasResultType = true; break;
++    case OpUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case OpSUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case OpSDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case OpUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case OpSUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
+     case OpTypeRayQueryKHR: *hasResult = true; *hasResultType = false; break;
+     case OpRayQueryInitializeKHR: *hasResult = false; *hasResultType = false; break;
+     case OpRayQueryTerminateKHR: *hasResult = false; *hasResultType = false; break;
+diff --git a/include/spirv/unified1/spirv.hpp11 b/include/spirv/unified1/spirv.hpp11
+index 20aaeb6..e17c6c6 100644
+--- a/include/spirv/unified1/spirv.hpp11
++++ b/include/spirv/unified1/spirv.hpp11
+@@ -1041,9 +1041,16 @@ enum class Capability : unsigned {
+     IOPipesINTEL = 5943,
+     BlockingPipesINTEL = 5945,
+     FPGARegINTEL = 5948,
++    DotProductInputAllKHR = 6016,
++    DotProductInput4x8BitKHR = 6017,
++    DotProductInput4x8BitPackedKHR = 6018,
++    DotProductKHR = 6019,
++    BitInstructions = 6025,
+     AtomicFloat32AddEXT = 6033,
+     AtomicFloat64AddEXT = 6034,
+     LongConstantCompositeINTEL = 6089,
++    AtomicFloat16AddEXT = 6095,
++    DebugInfoModuleINTEL = 6114,
+     Max = 0x7fffffff,
+ };
+ 
+@@ -1142,6 +1149,11 @@ enum class OverflowModes : unsigned {
+     Max = 0x7fffffff,
+ };
+ 
++enum class PackedVectorFormat : unsigned {
++    PackedVectorFormat4x8BitKHR = 0,
++    Max = 0x7fffffff,
++};
++
+ enum class Op : unsigned {
+     OpNop = 0,
+     OpUndef = 1,
+@@ -1499,6 +1511,12 @@ enum class Op : unsigned {
+     OpConvertUToAccelerationStructureKHR = 4447,
+     OpIgnoreIntersectionKHR = 4448,
+     OpTerminateRayKHR = 4449,
++    OpSDotKHR = 4450,
++    OpUDotKHR = 4451,
++    OpSUDotKHR = 4452,
++    OpSDotAccSatKHR = 4453,
++    OpUDotAccSatKHR = 4454,
++    OpSUDotAccSatKHR = 4455,
+     OpTypeRayQueryKHR = 4472,
+     OpRayQueryInitializeKHR = 4473,
+     OpRayQueryTerminateKHR = 4474,
+@@ -2139,6 +2157,12 @@ inline void HasResultAndType(Op opcode, bool *hasResult, bool *hasResultType) {
+     case Op::OpConvertUToAccelerationStructureKHR: *hasResult = true; *hasResultType = true; break;
+     case Op::OpIgnoreIntersectionKHR: *hasResult = false; *hasResultType = false; break;
+     case Op::OpTerminateRayKHR: *hasResult = false; *hasResultType = false; break;
++    case Op::OpSDotKHR: *hasResult = true; *hasResultType = true; break;
++    case Op::OpUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case Op::OpSUDotKHR: *hasResult = true; *hasResultType = true; break;
++    case Op::OpSDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case Op::OpUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
++    case Op::OpSUDotAccSatKHR: *hasResult = true; *hasResultType = true; break;
+     case Op::OpTypeRayQueryKHR: *hasResult = true; *hasResultType = false; break;
+     case Op::OpRayQueryInitializeKHR: *hasResult = false; *hasResultType = false; break;
+     case Op::OpRayQueryTerminateKHR: *hasResult = false; *hasResultType = false; break;
+diff --git a/include/spirv/unified1/spirv.json b/include/spirv/unified1/spirv.json
+index 74815c9..1c63036 100644
+--- a/include/spirv/unified1/spirv.json
++++ b/include/spirv/unified1/spirv.json
+@@ -1028,9 +1028,16 @@
+                     "IOPipesINTEL": 5943,
+                     "BlockingPipesINTEL": 5945,
+                     "FPGARegINTEL": 5948,
++                    "DotProductInputAllKHR": 6016,
++                    "DotProductInput4x8BitKHR": 6017,
++                    "DotProductInput4x8BitPackedKHR": 6018,
++                    "DotProductKHR": 6019,
++                    "BitInstructions": 6025,
+                     "AtomicFloat32AddEXT": 6033,
+                     "AtomicFloat64AddEXT": 6034,
+-                    "LongConstantCompositeINTEL": 6089
++                    "LongConstantCompositeINTEL": 6089,
++                    "AtomicFloat16AddEXT": 6095,
++                    "DebugInfoModuleINTEL": 6114
+                 }
+             },
+             {
+@@ -1133,6 +1140,14 @@
+                     "SAT_SYM": 3
+                 }
+             },
++            {
++                "Name": "PackedVectorFormat",
++                "Type": "Value",
++                "Values":
++                {
++                    "PackedVectorFormat4x8BitKHR": 0
++                }
++            },
+             {
+                 "Name": "Op",
+                 "Type": "Value",
+@@ -1494,6 +1509,12 @@
+                     "OpConvertUToAccelerationStructureKHR": 4447,
+                     "OpIgnoreIntersectionKHR": 4448,
+                     "OpTerminateRayKHR": 4449,
++                    "OpSDotKHR": 4450,
++                    "OpUDotKHR": 4451,
++                    "OpSUDotKHR": 4452,
++                    "OpSDotAccSatKHR": 4453,
++                    "OpUDotAccSatKHR": 4454,
++                    "OpSUDotAccSatKHR": 4455,
+                     "OpTypeRayQueryKHR": 4472,
+                     "OpRayQueryInitializeKHR": 4473,
+                     "OpRayQueryTerminateKHR": 4474,
+diff --git a/include/spirv/unified1/spirv.lua b/include/spirv/unified1/spirv.lua
+index f1e81de..afdaec9 100644
+--- a/include/spirv/unified1/spirv.lua
++++ b/include/spirv/unified1/spirv.lua
+@@ -1003,9 +1003,16 @@ spv = {
+         IOPipesINTEL = 5943,
+         BlockingPipesINTEL = 5945,
+         FPGARegINTEL = 5948,
++        DotProductInputAllKHR = 6016,
++        DotProductInput4x8BitKHR = 6017,
++        DotProductInput4x8BitPackedKHR = 6018,
++        DotProductKHR = 6019,
++        BitInstructions = 6025,
+         AtomicFloat32AddEXT = 6033,
+         AtomicFloat64AddEXT = 6034,
+         LongConstantCompositeINTEL = 6089,
++        AtomicFloat16AddEXT = 6095,
++        DebugInfoModuleINTEL = 6114,
+     },
+ 
+     RayFlagsShift = {
+@@ -1094,6 +1101,10 @@ spv = {
+         SAT_SYM = 3,
+     },
+ 
++    PackedVectorFormat = {
++        PackedVectorFormat4x8BitKHR = 0,
++    },
++
+     Op = {
+         OpNop = 0,
+         OpUndef = 1,
+@@ -1451,6 +1462,12 @@ spv = {
+         OpConvertUToAccelerationStructureKHR = 4447,
+         OpIgnoreIntersectionKHR = 4448,
+         OpTerminateRayKHR = 4449,
++        OpSDotKHR = 4450,
++        OpUDotKHR = 4451,
++        OpSUDotKHR = 4452,
++        OpSDotAccSatKHR = 4453,
++        OpUDotAccSatKHR = 4454,
++        OpSUDotAccSatKHR = 4455,
+         OpTypeRayQueryKHR = 4472,
+         OpRayQueryInitializeKHR = 4473,
+         OpRayQueryTerminateKHR = 4474,
+diff --git a/include/spirv/unified1/spirv.py b/include/spirv/unified1/spirv.py
+index 4fc2ddd..09755a2 100644
+--- a/include/spirv/unified1/spirv.py
++++ b/include/spirv/unified1/spirv.py
+@@ -1003,9 +1003,16 @@ spv = {
+         'IOPipesINTEL' : 5943,
+         'BlockingPipesINTEL' : 5945,
+         'FPGARegINTEL' : 5948,
++        'DotProductInputAllKHR' : 6016,
++        'DotProductInput4x8BitKHR' : 6017,
++        'DotProductInput4x8BitPackedKHR' : 6018,
++        'DotProductKHR' : 6019,
++        'BitInstructions' : 6025,
+         'AtomicFloat32AddEXT' : 6033,
+         'AtomicFloat64AddEXT' : 6034,
+         'LongConstantCompositeINTEL' : 6089,
++        'AtomicFloat16AddEXT' : 6095,
++        'DebugInfoModuleINTEL' : 6114,
+     },
+ 
+     'RayFlagsShift' : {
+@@ -1094,6 +1101,10 @@ spv = {
+         'SAT_SYM' : 3,
+     },
+ 
++    'PackedVectorFormat' : {
++        'PackedVectorFormat4x8BitKHR' : 0,
++    },
++
+     'Op' : {
+         'OpNop' : 0,
+         'OpUndef' : 1,
+@@ -1451,6 +1462,12 @@ spv = {
+         'OpConvertUToAccelerationStructureKHR' : 4447,
+         'OpIgnoreIntersectionKHR' : 4448,
+         'OpTerminateRayKHR' : 4449,
++        'OpSDotKHR' : 4450,
++        'OpUDotKHR' : 4451,
++        'OpSUDotKHR' : 4452,
++        'OpSDotAccSatKHR' : 4453,
++        'OpUDotAccSatKHR' : 4454,
++        'OpSUDotAccSatKHR' : 4455,
+         'OpTypeRayQueryKHR' : 4472,
+         'OpRayQueryInitializeKHR' : 4473,
+         'OpRayQueryTerminateKHR' : 4474,
+diff --git a/include/spirv/unified1/spv.d b/include/spirv/unified1/spv.d
+index d15b3f5..179a6b1 100644
+--- a/include/spirv/unified1/spv.d
++++ b/include/spirv/unified1/spv.d
+@@ -1048,9 +1048,16 @@ enum Capability : uint
+     IOPipesINTEL = 5943,
+     BlockingPipesINTEL = 5945,
+     FPGARegINTEL = 5948,
++    DotProductInputAllKHR = 6016,
++    DotProductInput4x8BitKHR = 6017,
++    DotProductInput4x8BitPackedKHR = 6018,
++    DotProductKHR = 6019,
++    BitInstructions = 6025,
+     AtomicFloat32AddEXT = 6033,
+     AtomicFloat64AddEXT = 6034,
+     LongConstantCompositeINTEL = 6089,
++    AtomicFloat16AddEXT = 6095,
++    DebugInfoModuleINTEL = 6114,
+ }
+ 
+ enum RayFlagsShift : uint
+@@ -1150,6 +1157,11 @@ enum OverflowModes : uint
+     SAT_SYM = 3,
+ }
+ 
++enum PackedVectorFormat : uint
++{
++    PackedVectorFormat4x8BitKHR = 0,
++}
++
+ enum Op : uint
+ {
+     OpNop = 0,
+@@ -1508,6 +1520,12 @@ enum Op : uint
+     OpConvertUToAccelerationStructureKHR = 4447,
+     OpIgnoreIntersectionKHR = 4448,
+     OpTerminateRayKHR = 4449,
++    OpSDotKHR = 4450,
++    OpUDotKHR = 4451,
++    OpSUDotKHR = 4452,
++    OpSDotAccSatKHR = 4453,
++    OpUDotAccSatKHR = 4454,
++    OpSUDotAccSatKHR = 4455,
+     OpTypeRayQueryKHR = 4472,
+     OpRayQueryInitializeKHR = 4473,
+     OpRayQueryTerminateKHR = 4474,
+diff --git a/tools/buildHeaders/bin/makeHeaders b/tools/buildHeaders/bin/makeHeaders
+index 0ca0b2f..7b4959e 100755
+--- a/tools/buildHeaders/bin/makeHeaders
++++ b/tools/buildHeaders/bin/makeHeaders
+@@ -4,4 +4,4 @@ python3 bin/makeExtinstHeaders.py
+ 
+ cd ../../include/spirv/unified1
+ ../../../tools/buildHeaders/build/install/bin/buildSpvHeaders -H spirv.core.grammar.json
+-dos2unix spirv.* SpirV.* spv.*
++dos2unix spirv.* spv.*
+diff --git a/tools/buildHeaders/jsonToSpirv.cpp b/tools/buildHeaders/jsonToSpirv.cpp
+index 78f2133..67b5bce 100644
+--- a/tools/buildHeaders/jsonToSpirv.cpp
++++ b/tools/buildHeaders/jsonToSpirv.cpp
+@@ -87,6 +87,7 @@ EnumValues RayQueryIntersectionParams;
+ EnumValues RayQueryCommittedIntersectionTypeParams;
+ EnumValues RayQueryCandidateIntersectionTypeParams;
+ EnumValues FragmentShadingRateParams;
++EnumValues PackedVectorFormatParams;
+ 
+ std::pair<bool, std::string> ReadFile(const std::string& path)
+ {
+@@ -231,6 +232,8 @@ ClassOptionality ToOperandClassAndOptionality(const std::string& operandKind, co
+             type = OperandRayQueryCandidateIntersectionType;
+         } else if (operandKind == "FragmentShadingRate") {
+             type = OperandFragmentShadingRate;
++        } else if (operandKind == "PackedVectorFormat") {
++            type = OperandPackedVectorFormat;
+         }
+ 
+         if (type == OperandNone) {
+@@ -539,6 +542,8 @@ void jsonToSpirv(const std::string& jsonPath, bool buildingHeaders)
+             establishOperandClass(enumName, OperandRayQueryCandidateIntersectionType, &RayQueryCandidateIntersectionTypeParams, operandEnum, category);
+         } else if (enumName == "FragmentShadingRate") {
+             establishOperandClass(enumName, OperandFragmentShadingRate, &FragmentShadingRateParams, operandEnum, category);
++        } else if (enumName == "PackedVectorFormat") {
++            establishOperandClass(enumName, OperandPackedVectorFormat, &PackedVectorFormatParams, operandEnum, category);
+         }
+     }
+ }
+diff --git a/tools/buildHeaders/jsonToSpirv.h b/tools/buildHeaders/jsonToSpirv.h
+index b1b7d88..3be6456 100644
+--- a/tools/buildHeaders/jsonToSpirv.h
++++ b/tools/buildHeaders/jsonToSpirv.h
+@@ -95,6 +95,7 @@ enum OperandClass {
+     OperandFPOperationMode,
+     OperandQuantizationModes,
+     OperandOverflowModes,
++    OperandPackedVectorFormat,
+ 
+     OperandOpcode,
+ 
