@@ -6,8 +6,8 @@ include /usr/share/dpkg/pkg-info.mk
 %:
 	dh $@
 
-override_dh_auto_configure:
-override_dh_auto_build:
+override_dh_auto_install:
+	dh_auto_install --destdir=debian/tmp
 
 gentarball:
 	git archive --format=tar upstream-unstable --prefix=$(DEB_SOURCE)-$(DEB_VERSION_UPSTREAM)/ | \
