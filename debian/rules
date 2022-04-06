@@ -9,6 +9,12 @@ include /usr/share/dpkg/pkg-info.mk
 override_dh_auto_install:
 	dh_auto_install --destdir=debian/tmp
 
+override_dh_install:
+	# these are not arch-independent
+	rm -rf debian/tmp/usr/share/cmake
+
+	dh_install
+
 gentarball:
 	git archive --format=tar upstream-unstable --prefix=$(DEB_SOURCE)-$(DEB_VERSION_UPSTREAM)/ | \
 		gzip -9 > \
