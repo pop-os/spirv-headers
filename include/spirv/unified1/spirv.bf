@@ -66,6 +66,9 @@ namespace Spv
             HLSL = 5,
             CPP_for_OpenCL = 6,
             SYCL = 7,
+            HERO_C = 8,
+            NZSL = 9,
+            WGSL = 10,
         }
 
         [AllowDuplicates, CRepr] public enum ExecutionModel
@@ -353,6 +356,8 @@ namespace Spv
             Float = 14,
             UnormInt24 = 15,
             UnormInt101010_2 = 16,
+            UnsignedIntRaw10EXT = 19,
+            UnsignedIntRaw12EXT = 20,
         }
 
         [AllowDuplicates, CRepr] public enum ImageOperandsShift
@@ -583,6 +588,7 @@ namespace Spv
             SingleElementVectorINTEL = 6085,
             VectorComputeCallableFunctionINTEL = 6087,
             MediaBlockIOINTEL = 6140,
+            FPMaxErrorDecorationINTEL = 6170,
             LatencyControlLabelINTEL = 6172,
             LatencyControlConstraintINTEL = 6173,
             ConduitKernelArgumentINTEL = 6175,
@@ -1157,6 +1163,7 @@ namespace Spv
             DotProduct = 6019,
             DotProductKHR = 6019,
             RayCullMaskKHR = 6020,
+            CooperativeMatrixKHR = 6022,
             BitInstructions = 6025,
             GroupNonUniformRotateKHR = 6026,
             AtomicFloat32AddEXT = 6033,
@@ -1168,6 +1175,7 @@ namespace Spv
             BFloat16ConversionINTEL = 6115,
             SplitBarrierINTEL = 6141,
             FPGAKernelAttributesv2INTEL = 6161,
+            FPMaxErrorINTEL = 6169,
             FPGALatencyControlINTEL = 6171,
             FPGAArgumentInterfacesINTEL = 6174,
             GroupUniformArithmeticKHR = 6400,
@@ -1276,6 +1284,38 @@ namespace Spv
         {
             PackedVectorFormat4x8Bit = 0,
             PackedVectorFormat4x8BitKHR = 0,
+        }
+
+        [AllowDuplicates, CRepr] public enum CooperativeMatrixOperandsShift
+        {
+            MatrixASignedComponentsKHR = 0,
+            MatrixBSignedComponentsKHR = 1,
+            MatrixCSignedComponentsKHR = 2,
+            MatrixResultSignedComponentsKHR = 3,
+            SaturatingAccumulationKHR = 4,
+        }
+
+        [AllowDuplicates, CRepr] public enum CooperativeMatrixOperandsMask
+        {
+            MaskNone = 0,
+            MatrixASignedComponentsKHR = 0x00000001,
+            MatrixBSignedComponentsKHR = 0x00000002,
+            MatrixCSignedComponentsKHR = 0x00000004,
+            MatrixResultSignedComponentsKHR = 0x00000008,
+            SaturatingAccumulationKHR = 0x00000010,
+        }
+
+        [AllowDuplicates, CRepr] public enum CooperativeMatrixLayout
+        {
+            RowMajorKHR = 0,
+            ColumnMajorKHR = 1,
+        }
+
+        [AllowDuplicates, CRepr] public enum CooperativeMatrixUse
+        {
+            MatrixAKHR = 0,
+            MatrixBKHR = 1,
+            MatrixAccumulatorKHR = 2,
         }
 
         [AllowDuplicates, CRepr] public enum Op
@@ -1652,6 +1692,11 @@ namespace Spv
             OpUDotAccSatKHR = 4454,
             OpSUDotAccSat = 4455,
             OpSUDotAccSatKHR = 4455,
+            OpTypeCooperativeMatrixKHR = 4456,
+            OpCooperativeMatrixLoadKHR = 4457,
+            OpCooperativeMatrixStoreKHR = 4458,
+            OpCooperativeMatrixMulAddKHR = 4459,
+            OpCooperativeMatrixLengthKHR = 4460,
             OpTypeRayQueryKHR = 4472,
             OpRayQueryInitializeKHR = 4473,
             OpRayQueryTerminateKHR = 4474,
