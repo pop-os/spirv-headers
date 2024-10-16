@@ -70,6 +70,7 @@ namespace Spv
             WGSL = 10,
             Slang = 11,
             Zig = 12,
+            Max = 0x7fffffff,
         }
 
         public enum ExecutionModel
@@ -97,6 +98,7 @@ namespace Spv
             CallableNV = 5318,
             TaskEXT = 5364,
             MeshEXT = 5365,
+            Max = 0x7fffffff,
         }
 
         public enum AddressingModel
@@ -106,6 +108,7 @@ namespace Spv
             Physical64 = 2,
             PhysicalStorageBuffer64 = 5348,
             PhysicalStorageBuffer64EXT = 5348,
+            Max = 0x7fffffff,
         }
 
         public enum MemoryModel
@@ -115,6 +118,7 @@ namespace Spv
             OpenCL = 2,
             Vulkan = 3,
             VulkanKHR = 3,
+            Max = 0x7fffffff,
         }
 
         public enum ExecutionMode
@@ -186,7 +190,9 @@ namespace Spv
             OutputLinesNV = 5269,
             OutputPrimitivesEXT = 5270,
             OutputPrimitivesNV = 5270,
+            DerivativeGroupQuadsKHR = 5289,
             DerivativeGroupQuadsNV = 5289,
+            DerivativeGroupLinearKHR = 5290,
             DerivativeGroupLinearNV = 5290,
             OutputTrianglesEXT = 5298,
             OutputTrianglesNV = 5298,
@@ -214,6 +220,7 @@ namespace Spv
             MaximumRegistersINTEL = 6461,
             MaximumRegistersIdINTEL = 6462,
             NamedMaximumRegistersINTEL = 6463,
+            Max = 0x7fffffff,
         }
 
         public enum StorageClass
@@ -253,6 +260,7 @@ namespace Spv
             CodeSectionINTEL = 5605,
             DeviceOnlyINTEL = 5936,
             HostOnlyINTEL = 5937,
+            Max = 0x7fffffff,
         }
 
         public enum Dim
@@ -265,6 +273,7 @@ namespace Spv
             Buffer = 5,
             SubpassData = 6,
             TileImageDataEXT = 4173,
+            Max = 0x7fffffff,
         }
 
         public enum SamplerAddressingMode
@@ -274,12 +283,14 @@ namespace Spv
             Clamp = 2,
             Repeat = 3,
             RepeatMirrored = 4,
+            Max = 0x7fffffff,
         }
 
         public enum SamplerFilterMode
         {
             Nearest = 0,
             Linear = 1,
+            Max = 0x7fffffff,
         }
 
         public enum ImageFormat
@@ -326,6 +337,7 @@ namespace Spv
             R8ui = 39,
             R64ui = 40,
             R64i = 41,
+            Max = 0x7fffffff,
         }
 
         public enum ImageChannelOrder
@@ -350,6 +362,7 @@ namespace Spv
             sRGBA = 17,
             sBGRA = 18,
             ABGR = 19,
+            Max = 0x7fffffff,
         }
 
         public enum ImageChannelDataType
@@ -373,6 +386,8 @@ namespace Spv
             UnormInt101010_2 = 16,
             UnsignedIntRaw10EXT = 19,
             UnsignedIntRaw12EXT = 20,
+            UnormInt2_101010EXT = 21,
+            Max = 0x7fffffff,
         }
 
         public enum ImageOperandsShift
@@ -397,6 +412,7 @@ namespace Spv
             ZeroExtend = 13,
             Nontemporal = 14,
             Offsets = 16,
+            Max = 0x7fffffff,
         }
 
         public enum ImageOperandsMask
@@ -436,6 +452,7 @@ namespace Spv
             AllowReassoc = 17,
             AllowReassocINTEL = 17,
             AllowTransform = 18,
+            Max = 0x7fffffff,
         }
 
         public enum FPFastMathModeMask
@@ -459,6 +476,7 @@ namespace Spv
             RTZ = 1,
             RTP = 2,
             RTN = 3,
+            Max = 0x7fffffff,
         }
 
         public enum LinkageType
@@ -466,6 +484,7 @@ namespace Spv
             Export = 0,
             Import = 1,
             LinkOnceODR = 2,
+            Max = 0x7fffffff,
         }
 
         public enum AccessQualifier
@@ -473,6 +492,7 @@ namespace Spv
             ReadOnly = 0,
             WriteOnly = 1,
             ReadWrite = 2,
+            Max = 0x7fffffff,
         }
 
         public enum FunctionParameterAttribute
@@ -486,6 +506,7 @@ namespace Spv
             NoWrite = 6,
             NoReadWrite = 7,
             RuntimeAlignedINTEL = 5940,
+            Max = 0x7fffffff,
         }
 
         public enum Decoration
@@ -635,6 +656,7 @@ namespace Spv
             ImplementInRegisterMapINTEL = 6191,
             CacheControlLoadINTEL = 6442,
             CacheControlStoreINTEL = 6443,
+            Max = 0x7fffffff,
         }
 
         public enum BuiltIn
@@ -777,12 +799,14 @@ namespace Spv
             HitKindFrontFacingMicroTriangleNV = 5405,
             HitKindBackFacingMicroTriangleNV = 5406,
             CullMaskKHR = 6021,
+            Max = 0x7fffffff,
         }
 
         public enum SelectionControlShift
         {
             Flatten = 0,
             DontFlatten = 1,
+            Max = 0x7fffffff,
         }
 
         public enum SelectionControlMask
@@ -813,6 +837,7 @@ namespace Spv
             NoFusionINTEL = 23,
             LoopCountINTEL = 24,
             MaxReinvocationDelayINTEL = 25,
+            Max = 0x7fffffff,
         }
 
         public enum LoopControlMask
@@ -846,6 +871,7 @@ namespace Spv
             Pure = 2,
             Const = 3,
             OptNoneINTEL = 16,
+            Max = 0x7fffffff,
         }
 
         public enum FunctionControlMask
@@ -877,6 +903,7 @@ namespace Spv
             MakeVisible = 14,
             MakeVisibleKHR = 14,
             Volatile = 15,
+            Max = 0x7fffffff,
         }
 
         public enum MemorySemanticsMask
@@ -914,6 +941,7 @@ namespace Spv
             NonPrivatePointerKHR = 5,
             AliasScopeINTELMask = 16,
             NoAliasINTELMask = 17,
+            Max = 0x7fffffff,
         }
 
         public enum MemoryAccessMask
@@ -942,6 +970,7 @@ namespace Spv
             QueueFamily = 5,
             QueueFamilyKHR = 5,
             ShaderCallKHR = 6,
+            Max = 0x7fffffff,
         }
 
         public enum GroupOperation
@@ -953,6 +982,7 @@ namespace Spv
             PartitionedReduceNV = 6,
             PartitionedInclusiveScanNV = 7,
             PartitionedExclusiveScanNV = 8,
+            Max = 0x7fffffff,
         }
 
         public enum KernelEnqueueFlags
@@ -960,11 +990,13 @@ namespace Spv
             NoWait = 0,
             WaitKernel = 1,
             WaitWorkGroup = 2,
+            Max = 0x7fffffff,
         }
 
         public enum KernelProfilingInfoShift
         {
             CmdExecTime = 0,
+            Max = 0x7fffffff,
         }
 
         public enum KernelProfilingInfoMask
@@ -1079,6 +1111,7 @@ namespace Spv
             RoundingModeRTZ = 4468,
             RayQueryProvisionalKHR = 4471,
             RayQueryKHR = 4472,
+            UntypedPointersKHR = 4473,
             RayTraversalPrimitiveCullingKHR = 4478,
             RayTracingKHR = 4479,
             TextureSampleWeightedQCOM = 4484,
@@ -1107,6 +1140,7 @@ namespace Spv
             MeshShadingEXT = 5283,
             FragmentBarycentricKHR = 5284,
             FragmentBarycentricNV = 5284,
+            ComputeDerivativeGroupQuadsKHR = 5288,
             ComputeDerivativeGroupQuadsNV = 5288,
             FragmentDensityEXT = 5291,
             ShadingRateNV = 5291,
@@ -1144,6 +1178,7 @@ namespace Spv
             VulkanMemoryModelDeviceScopeKHR = 5346,
             PhysicalStorageBufferAddresses = 5347,
             PhysicalStorageBufferAddressesEXT = 5347,
+            ComputeDerivativeGroupLinearKHR = 5350,
             ComputeDerivativeGroupLinearNV = 5350,
             RayTracingProvisionalKHR = 5353,
             CooperativeMatrixNV = 5357,
@@ -1232,10 +1267,12 @@ namespace Spv
             FPGAArgumentInterfacesINTEL = 6174,
             GlobalVariableHostAccessINTEL = 6187,
             GlobalVariableFPGADecorationsINTEL = 6189,
+            SubgroupBufferPrefetchINTEL = 6220,
             GroupUniformArithmeticKHR = 6400,
             MaskedGatherScatterINTEL = 6427,
             CacheControlsINTEL = 6441,
             RegisterLimitsINTEL = 6460,
+            Max = 0x7fffffff,
         }
 
         public enum RayFlagsShift
@@ -1251,6 +1288,7 @@ namespace Spv
             SkipTrianglesKHR = 8,
             SkipAABBsKHR = 9,
             ForceOpacityMicromap2StateEXT = 10,
+            Max = 0x7fffffff,
         }
 
         public enum RayFlagsMask
@@ -1273,6 +1311,7 @@ namespace Spv
         {
             RayQueryCandidateIntersectionKHR = 0,
             RayQueryCommittedIntersectionKHR = 1,
+            Max = 0x7fffffff,
         }
 
         public enum RayQueryCommittedIntersectionType
@@ -1280,12 +1319,14 @@ namespace Spv
             RayQueryCommittedIntersectionNoneKHR = 0,
             RayQueryCommittedIntersectionTriangleKHR = 1,
             RayQueryCommittedIntersectionGeneratedKHR = 2,
+            Max = 0x7fffffff,
         }
 
         public enum RayQueryCandidateIntersectionType
         {
             RayQueryCandidateIntersectionTriangleKHR = 0,
             RayQueryCandidateIntersectionAABBKHR = 1,
+            Max = 0x7fffffff,
         }
 
         public enum FragmentShadingRateShift
@@ -1294,6 +1335,7 @@ namespace Spv
             Vertical4Pixels = 1,
             Horizontal2Pixels = 2,
             Horizontal4Pixels = 3,
+            Max = 0x7fffffff,
         }
 
         public enum FragmentShadingRateMask
@@ -1309,12 +1351,14 @@ namespace Spv
         {
             Preserve = 0,
             FlushToZero = 1,
+            Max = 0x7fffffff,
         }
 
         public enum FPOperationMode
         {
             IEEE = 0,
             ALT = 1,
+            Max = 0x7fffffff,
         }
 
         public enum QuantizationModes
@@ -1327,6 +1371,7 @@ namespace Spv
             RND_MIN_INF = 5,
             RND_CONV = 6,
             RND_CONV_ODD = 7,
+            Max = 0x7fffffff,
         }
 
         public enum OverflowModes
@@ -1335,12 +1380,14 @@ namespace Spv
             SAT = 1,
             SAT_ZERO = 2,
             SAT_SYM = 3,
+            Max = 0x7fffffff,
         }
 
         public enum PackedVectorFormat
         {
             PackedVectorFormat4x8Bit = 0,
             PackedVectorFormat4x8BitKHR = 0,
+            Max = 0x7fffffff,
         }
 
         public enum CooperativeMatrixOperandsShift
@@ -1350,6 +1397,7 @@ namespace Spv
             MatrixCSignedComponentsKHR = 2,
             MatrixResultSignedComponentsKHR = 3,
             SaturatingAccumulationKHR = 4,
+            Max = 0x7fffffff,
         }
 
         public enum CooperativeMatrixOperandsMask
@@ -1368,6 +1416,7 @@ namespace Spv
             ColumnMajorKHR = 1,
             RowBlockedInterleavedARM = 4202,
             ColumnBlockedInterleavedARM = 4203,
+            Max = 0x7fffffff,
         }
 
         public enum CooperativeMatrixUse
@@ -1375,12 +1424,14 @@ namespace Spv
             MatrixAKHR = 0,
             MatrixBKHR = 1,
             MatrixAccumulatorKHR = 2,
+            Max = 0x7fffffff,
         }
 
         public enum InitializationModeQualifier
         {
             InitOnDeviceReprogramINTEL = 0,
             InitOnDeviceResetINTEL = 1,
+            Max = 0x7fffffff,
         }
 
         public enum HostAccessQualifier
@@ -1389,6 +1440,7 @@ namespace Spv
             ReadINTEL = 1,
             WriteINTEL = 2,
             ReadWriteINTEL = 3,
+            Max = 0x7fffffff,
         }
 
         public enum LoadCacheControl
@@ -1398,6 +1450,7 @@ namespace Spv
             StreamingINTEL = 2,
             InvalidateAfterReadINTEL = 3,
             ConstCachedINTEL = 4,
+            Max = 0x7fffffff,
         }
 
         public enum StoreCacheControl
@@ -1406,17 +1459,20 @@ namespace Spv
             WriteThroughINTEL = 1,
             WriteBackINTEL = 2,
             StreamingINTEL = 3,
+            Max = 0x7fffffff,
         }
 
         public enum NamedMaximumNumberOfRegisters
         {
             AutoINTEL = 0,
+            Max = 0x7fffffff,
         }
 
         public enum RawAccessChainOperandsShift
         {
             RobustnessPerComponentNV = 0,
             RobustnessPerElementNV = 1,
+            Max = 0x7fffffff,
         }
 
         public enum RawAccessChainOperandsMask
@@ -1424,6 +1480,11 @@ namespace Spv
             MaskNone = 0,
             RobustnessPerComponentNV = 0x00000001,
             RobustnessPerElementNV = 0x00000002,
+        }
+
+        public enum FPEncoding
+        {
+            Max = 0x7fffffff,
         }
 
         public enum Op
@@ -1776,8 +1837,16 @@ namespace Spv
             OpDepthAttachmentReadEXT = 4161,
             OpStencilAttachmentReadEXT = 4162,
             OpTerminateInvocation = 4416,
+            OpTypeUntypedPointerKHR = 4417,
+            OpUntypedVariableKHR = 4418,
+            OpUntypedAccessChainKHR = 4419,
+            OpUntypedInBoundsAccessChainKHR = 4420,
             OpSubgroupBallotKHR = 4421,
             OpSubgroupFirstInvocationKHR = 4422,
+            OpUntypedPtrAccessChainKHR = 4423,
+            OpUntypedInBoundsPtrAccessChainKHR = 4424,
+            OpUntypedArrayLengthKHR = 4425,
+            OpUntypedPrefetchKHR = 4426,
             OpSubgroupAllKHR = 4428,
             OpSubgroupAnyKHR = 4429,
             OpSubgroupAllEqualKHR = 4430,
@@ -2155,6 +2224,7 @@ namespace Spv
             OpConvertBF16ToFINTEL = 6117,
             OpControlBarrierArriveINTEL = 6142,
             OpControlBarrierWaitINTEL = 6143,
+            OpSubgroupBlockPrefetchINTEL = 6221,
             OpGroupIMulKHR = 6401,
             OpGroupFMulKHR = 6402,
             OpGroupBitwiseAndKHR = 6403,
@@ -2165,6 +2235,7 @@ namespace Spv
             OpGroupLogicalXorKHR = 6408,
             OpMaskedGatherINTEL = 6428,
             OpMaskedScatterINTEL = 6429,
+            Max = 0x7fffffff,
         }
     }
 }

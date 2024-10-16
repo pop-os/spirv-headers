@@ -65,6 +65,7 @@ spv = {
         WGSL = 10,
         Slang = 11,
         Zig = 12,
+        Max = 0x7fffffff,
     },
 
     ExecutionModel = {
@@ -91,6 +92,7 @@ spv = {
         CallableNV = 5318,
         TaskEXT = 5364,
         MeshEXT = 5365,
+        Max = 0x7fffffff,
     },
 
     AddressingModel = {
@@ -99,6 +101,7 @@ spv = {
         Physical64 = 2,
         PhysicalStorageBuffer64 = 5348,
         PhysicalStorageBuffer64EXT = 5348,
+        Max = 0x7fffffff,
     },
 
     MemoryModel = {
@@ -107,6 +110,7 @@ spv = {
         OpenCL = 2,
         Vulkan = 3,
         VulkanKHR = 3,
+        Max = 0x7fffffff,
     },
 
     ExecutionMode = {
@@ -177,7 +181,9 @@ spv = {
         OutputLinesNV = 5269,
         OutputPrimitivesEXT = 5270,
         OutputPrimitivesNV = 5270,
+        DerivativeGroupQuadsKHR = 5289,
         DerivativeGroupQuadsNV = 5289,
+        DerivativeGroupLinearKHR = 5290,
         DerivativeGroupLinearNV = 5290,
         OutputTrianglesEXT = 5298,
         OutputTrianglesNV = 5298,
@@ -205,6 +211,7 @@ spv = {
         MaximumRegistersINTEL = 6461,
         MaximumRegistersIdINTEL = 6462,
         NamedMaximumRegistersINTEL = 6463,
+        Max = 0x7fffffff,
     },
 
     StorageClass = {
@@ -243,6 +250,7 @@ spv = {
         CodeSectionINTEL = 5605,
         DeviceOnlyINTEL = 5936,
         HostOnlyINTEL = 5937,
+        Max = 0x7fffffff,
     },
 
     Dim = {
@@ -254,6 +262,7 @@ spv = {
         Buffer = 5,
         SubpassData = 6,
         TileImageDataEXT = 4173,
+        Max = 0x7fffffff,
     },
 
     SamplerAddressingMode = {
@@ -262,11 +271,13 @@ spv = {
         Clamp = 2,
         Repeat = 3,
         RepeatMirrored = 4,
+        Max = 0x7fffffff,
     },
 
     SamplerFilterMode = {
         Nearest = 0,
         Linear = 1,
+        Max = 0x7fffffff,
     },
 
     ImageFormat = {
@@ -312,6 +323,7 @@ spv = {
         R8ui = 39,
         R64ui = 40,
         R64i = 41,
+        Max = 0x7fffffff,
     },
 
     ImageChannelOrder = {
@@ -335,6 +347,7 @@ spv = {
         sRGBA = 17,
         sBGRA = 18,
         ABGR = 19,
+        Max = 0x7fffffff,
     },
 
     ImageChannelDataType = {
@@ -357,6 +370,8 @@ spv = {
         UnormInt101010_2 = 16,
         UnsignedIntRaw10EXT = 19,
         UnsignedIntRaw12EXT = 20,
+        UnormInt2_101010EXT = 21,
+        Max = 0x7fffffff,
     },
 
     ImageOperandsShift = {
@@ -380,6 +395,7 @@ spv = {
         ZeroExtend = 13,
         Nontemporal = 14,
         Offsets = 16,
+        Max = 0x7fffffff,
     },
 
     ImageOperandsMask = {
@@ -417,6 +433,7 @@ spv = {
         AllowReassoc = 17,
         AllowReassocINTEL = 17,
         AllowTransform = 18,
+        Max = 0x7fffffff,
     },
 
     FPFastMathModeMask = {
@@ -438,18 +455,21 @@ spv = {
         RTZ = 1,
         RTP = 2,
         RTN = 3,
+        Max = 0x7fffffff,
     },
 
     LinkageType = {
         Export = 0,
         Import = 1,
         LinkOnceODR = 2,
+        Max = 0x7fffffff,
     },
 
     AccessQualifier = {
         ReadOnly = 0,
         WriteOnly = 1,
         ReadWrite = 2,
+        Max = 0x7fffffff,
     },
 
     FunctionParameterAttribute = {
@@ -462,6 +482,7 @@ spv = {
         NoWrite = 6,
         NoReadWrite = 7,
         RuntimeAlignedINTEL = 5940,
+        Max = 0x7fffffff,
     },
 
     Decoration = {
@@ -610,6 +631,7 @@ spv = {
         ImplementInRegisterMapINTEL = 6191,
         CacheControlLoadINTEL = 6442,
         CacheControlStoreINTEL = 6443,
+        Max = 0x7fffffff,
     },
 
     BuiltIn = {
@@ -751,11 +773,13 @@ spv = {
         HitKindFrontFacingMicroTriangleNV = 5405,
         HitKindBackFacingMicroTriangleNV = 5406,
         CullMaskKHR = 6021,
+        Max = 0x7fffffff,
     },
 
     SelectionControlShift = {
         Flatten = 0,
         DontFlatten = 1,
+        Max = 0x7fffffff,
     },
 
     SelectionControlMask = {
@@ -784,6 +808,7 @@ spv = {
         NoFusionINTEL = 23,
         LoopCountINTEL = 24,
         MaxReinvocationDelayINTEL = 25,
+        Max = 0x7fffffff,
     },
 
     LoopControlMask = {
@@ -815,6 +840,7 @@ spv = {
         Pure = 2,
         Const = 3,
         OptNoneINTEL = 16,
+        Max = 0x7fffffff,
     },
 
     FunctionControlMask = {
@@ -844,6 +870,7 @@ spv = {
         MakeVisible = 14,
         MakeVisibleKHR = 14,
         Volatile = 15,
+        Max = 0x7fffffff,
     },
 
     MemorySemanticsMask = {
@@ -879,6 +906,7 @@ spv = {
         NonPrivatePointerKHR = 5,
         AliasScopeINTELMask = 16,
         NoAliasINTELMask = 17,
+        Max = 0x7fffffff,
     },
 
     MemoryAccessMask = {
@@ -905,6 +933,7 @@ spv = {
         QueueFamily = 5,
         QueueFamilyKHR = 5,
         ShaderCallKHR = 6,
+        Max = 0x7fffffff,
     },
 
     GroupOperation = {
@@ -915,16 +944,19 @@ spv = {
         PartitionedReduceNV = 6,
         PartitionedInclusiveScanNV = 7,
         PartitionedExclusiveScanNV = 8,
+        Max = 0x7fffffff,
     },
 
     KernelEnqueueFlags = {
         NoWait = 0,
         WaitKernel = 1,
         WaitWorkGroup = 2,
+        Max = 0x7fffffff,
     },
 
     KernelProfilingInfoShift = {
         CmdExecTime = 0,
+        Max = 0x7fffffff,
     },
 
     KernelProfilingInfoMask = {
@@ -1037,6 +1069,7 @@ spv = {
         RoundingModeRTZ = 4468,
         RayQueryProvisionalKHR = 4471,
         RayQueryKHR = 4472,
+        UntypedPointersKHR = 4473,
         RayTraversalPrimitiveCullingKHR = 4478,
         RayTracingKHR = 4479,
         TextureSampleWeightedQCOM = 4484,
@@ -1065,6 +1098,7 @@ spv = {
         MeshShadingEXT = 5283,
         FragmentBarycentricKHR = 5284,
         FragmentBarycentricNV = 5284,
+        ComputeDerivativeGroupQuadsKHR = 5288,
         ComputeDerivativeGroupQuadsNV = 5288,
         FragmentDensityEXT = 5291,
         ShadingRateNV = 5291,
@@ -1102,6 +1136,7 @@ spv = {
         VulkanMemoryModelDeviceScopeKHR = 5346,
         PhysicalStorageBufferAddresses = 5347,
         PhysicalStorageBufferAddressesEXT = 5347,
+        ComputeDerivativeGroupLinearKHR = 5350,
         ComputeDerivativeGroupLinearNV = 5350,
         RayTracingProvisionalKHR = 5353,
         CooperativeMatrixNV = 5357,
@@ -1190,10 +1225,12 @@ spv = {
         FPGAArgumentInterfacesINTEL = 6174,
         GlobalVariableHostAccessINTEL = 6187,
         GlobalVariableFPGADecorationsINTEL = 6189,
+        SubgroupBufferPrefetchINTEL = 6220,
         GroupUniformArithmeticKHR = 6400,
         MaskedGatherScatterINTEL = 6427,
         CacheControlsINTEL = 6441,
         RegisterLimitsINTEL = 6460,
+        Max = 0x7fffffff,
     },
 
     RayFlagsShift = {
@@ -1208,6 +1245,7 @@ spv = {
         SkipTrianglesKHR = 8,
         SkipAABBsKHR = 9,
         ForceOpacityMicromap2StateEXT = 10,
+        Max = 0x7fffffff,
     },
 
     RayFlagsMask = {
@@ -1228,17 +1266,20 @@ spv = {
     RayQueryIntersection = {
         RayQueryCandidateIntersectionKHR = 0,
         RayQueryCommittedIntersectionKHR = 1,
+        Max = 0x7fffffff,
     },
 
     RayQueryCommittedIntersectionType = {
         RayQueryCommittedIntersectionNoneKHR = 0,
         RayQueryCommittedIntersectionTriangleKHR = 1,
         RayQueryCommittedIntersectionGeneratedKHR = 2,
+        Max = 0x7fffffff,
     },
 
     RayQueryCandidateIntersectionType = {
         RayQueryCandidateIntersectionTriangleKHR = 0,
         RayQueryCandidateIntersectionAABBKHR = 1,
+        Max = 0x7fffffff,
     },
 
     FragmentShadingRateShift = {
@@ -1246,6 +1287,7 @@ spv = {
         Vertical4Pixels = 1,
         Horizontal2Pixels = 2,
         Horizontal4Pixels = 3,
+        Max = 0x7fffffff,
     },
 
     FragmentShadingRateMask = {
@@ -1259,11 +1301,13 @@ spv = {
     FPDenormMode = {
         Preserve = 0,
         FlushToZero = 1,
+        Max = 0x7fffffff,
     },
 
     FPOperationMode = {
         IEEE = 0,
         ALT = 1,
+        Max = 0x7fffffff,
     },
 
     QuantizationModes = {
@@ -1275,6 +1319,7 @@ spv = {
         RND_MIN_INF = 5,
         RND_CONV = 6,
         RND_CONV_ODD = 7,
+        Max = 0x7fffffff,
     },
 
     OverflowModes = {
@@ -1282,11 +1327,13 @@ spv = {
         SAT = 1,
         SAT_ZERO = 2,
         SAT_SYM = 3,
+        Max = 0x7fffffff,
     },
 
     PackedVectorFormat = {
         PackedVectorFormat4x8Bit = 0,
         PackedVectorFormat4x8BitKHR = 0,
+        Max = 0x7fffffff,
     },
 
     CooperativeMatrixOperandsShift = {
@@ -1295,6 +1342,7 @@ spv = {
         MatrixCSignedComponentsKHR = 2,
         MatrixResultSignedComponentsKHR = 3,
         SaturatingAccumulationKHR = 4,
+        Max = 0x7fffffff,
     },
 
     CooperativeMatrixOperandsMask = {
@@ -1311,17 +1359,20 @@ spv = {
         ColumnMajorKHR = 1,
         RowBlockedInterleavedARM = 4202,
         ColumnBlockedInterleavedARM = 4203,
+        Max = 0x7fffffff,
     },
 
     CooperativeMatrixUse = {
         MatrixAKHR = 0,
         MatrixBKHR = 1,
         MatrixAccumulatorKHR = 2,
+        Max = 0x7fffffff,
     },
 
     InitializationModeQualifier = {
         InitOnDeviceReprogramINTEL = 0,
         InitOnDeviceResetINTEL = 1,
+        Max = 0x7fffffff,
     },
 
     HostAccessQualifier = {
@@ -1329,6 +1380,7 @@ spv = {
         ReadINTEL = 1,
         WriteINTEL = 2,
         ReadWriteINTEL = 3,
+        Max = 0x7fffffff,
     },
 
     LoadCacheControl = {
@@ -1337,6 +1389,7 @@ spv = {
         StreamingINTEL = 2,
         InvalidateAfterReadINTEL = 3,
         ConstCachedINTEL = 4,
+        Max = 0x7fffffff,
     },
 
     StoreCacheControl = {
@@ -1344,21 +1397,28 @@ spv = {
         WriteThroughINTEL = 1,
         WriteBackINTEL = 2,
         StreamingINTEL = 3,
+        Max = 0x7fffffff,
     },
 
     NamedMaximumNumberOfRegisters = {
         AutoINTEL = 0,
+        Max = 0x7fffffff,
     },
 
     RawAccessChainOperandsShift = {
         RobustnessPerComponentNV = 0,
         RobustnessPerElementNV = 1,
+        Max = 0x7fffffff,
     },
 
     RawAccessChainOperandsMask = {
         MaskNone = 0,
         RobustnessPerComponentNV = 0x00000001,
         RobustnessPerElementNV = 0x00000002,
+    },
+
+    FPEncoding = {
+        Max = 0x7fffffff,
     },
 
     Op = {
@@ -1710,8 +1770,16 @@ spv = {
         OpDepthAttachmentReadEXT = 4161,
         OpStencilAttachmentReadEXT = 4162,
         OpTerminateInvocation = 4416,
+        OpTypeUntypedPointerKHR = 4417,
+        OpUntypedVariableKHR = 4418,
+        OpUntypedAccessChainKHR = 4419,
+        OpUntypedInBoundsAccessChainKHR = 4420,
         OpSubgroupBallotKHR = 4421,
         OpSubgroupFirstInvocationKHR = 4422,
+        OpUntypedPtrAccessChainKHR = 4423,
+        OpUntypedInBoundsPtrAccessChainKHR = 4424,
+        OpUntypedArrayLengthKHR = 4425,
+        OpUntypedPrefetchKHR = 4426,
         OpSubgroupAllKHR = 4428,
         OpSubgroupAnyKHR = 4429,
         OpSubgroupAllEqualKHR = 4430,
@@ -2089,6 +2157,7 @@ spv = {
         OpConvertBF16ToFINTEL = 6117,
         OpControlBarrierArriveINTEL = 6142,
         OpControlBarrierWaitINTEL = 6143,
+        OpSubgroupBlockPrefetchINTEL = 6221,
         OpGroupIMulKHR = 6401,
         OpGroupFMulKHR = 6402,
         OpGroupBitwiseAndKHR = 6403,
@@ -2099,6 +2168,7 @@ spv = {
         OpGroupLogicalXorKHR = 6408,
         OpMaskedGatherINTEL = 6428,
         OpMaskedScatterINTEL = 6429,
+        Max = 0x7fffffff,
     },
 
 }
